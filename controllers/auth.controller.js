@@ -39,9 +39,26 @@ module.exports.login = (req, res, next) => {
 }
 
 module.exports.doLogin = (req, res, next) => {
-  passport.authenticate('local-auth', () => {
-    
-  })
+
+  function renderWithErrors(errors) {
+    res.render('auth/login', {
+      user: req.body,
+      errors: errors
+    })
+  }
+
+  passport.authenticate('local-auth', (error, user, validation) => {
+    console.log('ahhhhhhhhhhhhhhhhhhhhhhhhhh')
+    if (error){
+      next(error)
+    }
+    else if (!user) {
+      renderWithErrors(validation)
+    }
+    else {
+      res.redirect('/profile')
+    }
+  }) (req, res, next)
 }
 
 module.exports.loginWithGoogleCallback = (req, res, next) => {

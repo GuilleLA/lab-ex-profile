@@ -29,6 +29,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session);
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use((req, res, next) => {
+  res.locals.path = req.path;
+  res.locals.session = req.user;
+  next();
+})
+
 // TODO: apply session & passport configuration with app.use(...)
 app.get('/', (req, res, next) => res.redirect('/login'))
 app.use('/', authRouter);
